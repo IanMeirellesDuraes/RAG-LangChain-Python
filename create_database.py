@@ -4,7 +4,7 @@ from langchain.schema import Document
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores.chroma import Chroma
 import os
-
+import shutil
 
 DATA_PATH = 'data'
 CHROMA_PATH = 'chroma'
