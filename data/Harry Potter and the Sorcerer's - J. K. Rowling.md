@@ -1,5 +1,5 @@
 
-M r. and Mrs. Dursley, of number four, Privet Drive, were proud to say
+Mr. and Mrs. Dursley, of number four, Privet Drive, were proud to say
 
 that they were perfectly normal, thank you very much. They were
 

@@ -3,6 +3,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 import os
+import argparse
 
 
 PROMPT_TEMPLATE = """
@@ -15,12 +16,17 @@ Answer the question based only on the following context:
 Answer the question based on the above context: {question}
 """
 
+CHROMA_PATH = 'chroma/'
 
 def main():
     #testando forma nova de query_text
-    query_text = input("Ask your question: ")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("query_text", type=str, help="The query text.")
+    args = parser.parse_args()
+    query_text = args.query_text
     #carregando o bd
-    db = Chroma.load('chroma')
+    embedding_function = OpenAIEmbeddings()
+    db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_function)
     #procurando as respostas
     results = db.similarity_search_with_relevance_scores(query_text, k = 4)
     if results[0][1] < 0.7 and len(results) == 0:
@@ -32,13 +38,13 @@ def main():
     #fazendo o prompt template
     prompt_template = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
     #fazendo o prompt para perguntar ao modelo, juntando o template e a pergunta
-    prompt = format.prompt_template(context = context_text, question = query_text)
+    prompt = prompt_template.format(context = context_text, question = query_text)
     
     #llm openAI
     model = ChatOpenAI()
     #perguntando pro modelo
     response_text = model.predict(prompt)
-
+    os.system('clear')
     #resposta formatada
     print(f"De acordo com os livros, a resposta para sua pergunta é: \n{response_text}")
 
