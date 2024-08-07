@@ -5,7 +5,11 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores.chroma import Chroma
 import os
 import shutil
+import openai
+from dotenv import load_dotenv
 
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
 
 DATA_PATH = 'data/'
 CHROMA_PATH = 'chroma/'

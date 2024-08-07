@@ -1,9 +1,14 @@
-from langchain.vectorstores.chroma import Chroma
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
+from langchain_community.vectorstores import Chroma
+from langchain_openai.embeddings import OpenAIEmbeddings
+from langchain_openai.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 import os
 import argparse
+import openai
+from dotenv import load_dotenv
+
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
 
 
 PROMPT_TEMPLATE = """
@@ -25,7 +30,7 @@ def main():
     args = parser.parse_args()
     query_text = args.query_text
     #carregando o bd
-    embedding_function = OpenAIEmbeddings()
+    embedding_function = OpenAIEmbeddings(openai_api_key=api_key)
     db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_function)
     #procurando as respostas
     results = db.similarity_search_with_relevance_scores(query_text, k = 4)
@@ -41,10 +46,9 @@ def main():
     prompt = prompt_template.format(context = context_text, question = query_text)
     
     #llm openAI
-    model = ChatOpenAI()
+    model = ChatOpenAI(openai_api_key=api_key)
     #perguntando pro modelo
     response_text = model.predict(prompt)
-    os.system('clear')
     #resposta formatada
     print(f"De acordo com os livros, a resposta para sua pergunta é: \n{response_text}")
 
